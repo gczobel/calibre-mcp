@@ -5,6 +5,14 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      # Major Python version bumps (3.12 -> 3.13/3.14) aren't safe to take
+      # blindly: the upstream package's compiled deps (pydantic-core/PyO3)
+      # don't support a new CPython version until their own toolchain
+      # catches up, which broke the build outright (see PR #1, reverted).
+      # Patch-level refreshes within 3.12.x are still allowed.
+      - dependency-name: "python"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
